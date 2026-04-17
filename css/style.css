@@ -10,7 +10,7 @@
 
   --text: #1f2937;
   --text-light: #5f6f65;
-  --bg: #cfe6c4;
+  --bg: #78e439;
   --white: #ffffff;
 
   /* Spacing scale */
@@ -38,7 +38,7 @@ body {
   min-height: 100vh;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", Arial, sans-serif;
   color: var(--text);
-  background: linear-gradient(180deg, #e4f3dc, var(--bg));
+  background: linear-gradient(90deg, #fff27f 0%, var(--bg) 100%);
 }
 
 .container {
@@ -72,9 +72,16 @@ body {
   font-size: 1rem;
 }
 
+.hidden {
+  display: none !important;
+}
+
 .page-content {
   padding-top: var(--spacing-xl);
   padding-bottom: var(--spacing-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
 }
 
 .card {
@@ -201,19 +208,45 @@ button[type="submit"]:hover {
   color: var(--text);
 }
 
-.site-footer {
-  margin-top: var(--spacing-lg);
-  padding: var(--spacing-md) 0;
-  text-align: center;
-  background: var(--white);
-  border-top: 1px solid #dbeadf;
+.results {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-md);
 }
 
-.site-footer p {
-  margin: 0;
-  color: var(--text-light);
-  font-size: 0.95rem;
-  font-weight: 500;
+.results_card {
+  background: #fbfefb;
+  border: 1px solid #d8e8db;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: var(--spacing-lg);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.results_card:hover {
+  transform: translateY(-2px);
+  border-color: #b7d9bf;
+  box-shadow: 0 18px 40px rgba(21, 101, 52, 0.18);
+}
+
+.results_card__title {
+  font-weight: 800;
+  color: var(--primaria);
+}
+
+.results_card__value {
+  word-break: break-word;
+}
+
+/* Mobile: volta para 1 coluna */
+@media (max-width: 768px) {
+  .results {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 900px) {
@@ -234,4 +267,15 @@ button[type="submit"]:hover {
   .grid {
     grid-template-columns: 1fr;
   }
+}
+
+.site-footer {
+  background: var(--white);
+  text-align: center;
+  padding: var(--spacing-md) 0;
+  border-top: 1px solid #dbeadf;
+}
+
+.site-footer p {
+  margin: 0;
 }

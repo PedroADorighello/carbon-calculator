@@ -16,22 +16,41 @@
 
   <main class="container page-content">
     <section class="card">
-      <form id="co2Form" class="grid">
+      <form id="calculator-form" class="grid">
         <div>
           <label for="origem">📍 Origem</label>
-          <input type="text" id="origem" list="cities-list" placeholder="Ex.: São Paulo, SP" required />
+          <input
+            type="text"
+            id="origem"
+            list="cities-list"
+            placeholder="Ex.: São Paulo, SP"
+            required
+          />
         </div>
 
         <div>
           <label for="destino">🏁 Destino</label>
-          <input type="text" id="destino" list="cities-list" placeholder="Ex.: Campinas, SP" required />
+          <input
+            type="text"
+            id="destino"
+            list="cities-list"
+            placeholder="Ex.: Campinas, SP"
+            required
+          />
         </div>
 
         <datalist id="cities-list"></datalist>
 
         <div class="full">
           <label for="distancia">📏 Distância (km)</label>
-          <input type="number" id="distancia" min="0" step="0.1" placeholder="Preenchimento automático" required />
+          <input
+            type="number"
+            id="distancia"
+            min="0"
+            step="0.1"
+            placeholder="Preenchimento automático"
+            required
+          />
           <label class="check-inline">
             <input type="checkbox" id="manualDistancia" />
             Inserir distância manualmente
@@ -43,16 +62,23 @@
           <label>🚦 Meio de transporte</label>
           <div class="transport-options" role="radiogroup" aria-label="Meio de transporte">
             <button type="button" class="transport-card" data-value="bike" aria-pressed="false">
-              <span class="emoji">🚲</span><span class="name">Bicicleta</span>
+              <span class="emoji">🚲</span>
+              <span class="name">Bicicleta</span>
             </button>
+
             <button type="button" class="transport-card" data-value="car" aria-pressed="false">
-              <span class="emoji">🚗</span><span class="name">Carro</span>
+              <span class="emoji">🚗</span>
+              <span class="name">Carro</span>
             </button>
+
             <button type="button" class="transport-card" data-value="bus" aria-pressed="false">
-              <span class="emoji">🚌</span><span class="name">Ônibus</span>
+              <span class="emoji">🚌</span>
+              <span class="name">Ônibus</span>
             </button>
+
             <button type="button" class="transport-card" data-value="truck" aria-pressed="false">
-              <span class="emoji">🚚</span><span class="name">Caminhão</span>
+              <span class="emoji">🚚</span>
+              <span class="name">Caminhão</span>
             </button>
           </div>
         </div>
@@ -61,10 +87,18 @@
           <button type="submit">🧮 Calcular Emissão</button>
         </div>
       </form>
+    </section>
 
-      <section id="resultado" class="result" aria-live="polite">
-        Preencha os dados e clique em <strong>Calcular Emissão</strong>.
-      </section>
+    <section id="results-section" class="card hidden">
+      <div id="results-content"></div>
+    </section>
+
+    <section id="comparison-section" class="card hidden">
+      <div id="comparison-content"></div>
+    </section>
+
+    <section id="carbon-credits-section" class="card hidden">
+      <div id="carbon-credits-content"></div>
     </section>
   </main>
 
@@ -76,61 +110,8 @@
 
   <script src="./js/routes-data.js"></script>
   <script src="./js/config.js"></script>
-  <script>
-    const form = document.getElementById("co2Form");
-    const resultado = document.getElementById("resultado");
-    const cards = document.querySelectorAll(".transport-card");
-    const distanciaInput = document.getElementById("distancia");
-
-    let transporteSelecionado = null;
-
-    cards.forEach((card) => {
-      card.addEventListener("click", () => {
-        cards.forEach((c) => {
-          c.classList.remove("selected");
-          c.setAttribute("aria-pressed", "false");
-        });
-        card.classList.add("selected");
-        card.setAttribute("aria-pressed", "true");
-        transporteSelecionado = card.dataset.value;
-      });
-    });
-
-    document.addEventListener("DOMContentLoaded", () => {
-      CONFIG.populateDatalist();
-      CONFIG.setupDistanceAutofill();
-    });
-
-    form.addEventListener("submit", (event) => {
-      event.preventDefault();
-
-      const origem = document.getElementById("origem").value.trim();
-      const destino = document.getElementById("destino").value.trim();
-      const distancia = Number(distanciaInput.value);
-
-      if (!origem || !destino || !Number.isFinite(distancia) || distancia < 0 || !transporteSelecionado) {
-        resultado.innerHTML = "⚠️ Verifique os campos informados.";
-        return;
-      }
-
-      const fator = CONFIG.EMISSION_FACTORS[transporteSelecionado];
-      const modo = CONFIG.TRANSPORT_MODES[transporteSelecionado];
-      const emissaoKg = distancia * fator;
-
-      const creditos = emissaoKg / CONFIG.CARBON_CREDIT.KG_PER_CREDIT;
-      const precoMin = creditos * CONFIG.CARBON_CREDIT.PRICE_MIN_BRL;
-      const precoMax = creditos * CONFIG.CARBON_CREDIT.PRICE_MAX_BRL;
-
-      resultado.innerHTML = `
-        <strong>✅ Resultado da viagem</strong><br>
-        <strong>Trajeto:</strong> ${origem} → ${destino}<br>
-        <strong>Transporte:</strong> ${modo.icone} ${modo.label}<br>
-        <strong>Distância:</strong> ${distancia.toFixed(1)} km<br>
-        <strong>Emissão estimada:</strong> ${emissaoKg.toFixed(2)} kg de CO₂<br>
-        <strong>Créditos de carbono (estimativa):</strong> ${creditos.toFixed(4)} crédito(s)<br>
-        <strong>Faixa de custo:</strong> R$ ${precoMin.toFixed(2)} a R$ ${precoMax.toFixed(2)}
-      `;
-    });
-  </script>
+  <script src="./js/calculator.js"></script>
+  <script src="./js/ui.js"></script>
+  <script src="./js/app.js"></script>
 </body>
 </html>
